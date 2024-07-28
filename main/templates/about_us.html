@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block content %} {% load static %}
+<section id="about" class="py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>We Search For The Perfect Home</h2>
+        <p class="lead">
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt,
+          pariatur!
+        </p>
+        <img src="{% static 'img/about.jpg' %}" alt="About Us Image" />
+        <p class="mt-4">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis
+          esse officia repudiandae ad saepe ex, amet neque quod accusamus rem
+          quia magnam magni dolorum facilis ullam minima perferendis?
+          Exercitationem at quaerat commodi id libero eveniet harum perferendis
+          laborum molestias quia.
+        </p>
+      </div>
+      <div class="col-md-4">
+        {% if is_mvp %} {% for realtor in is_mvp %}
+        <div class="card">
+          <img
+            class="card-img-top"
+            src="{{ realtor.photo.url }}"
+            alt="MVP Realtor"
+          />
+          <div class="card-body">
+            <h5 class="card-title">Seller Of The Month</h5>
+            <h6 class="text-secondary">{{ realtor.name }}</h6>
+            <p class="card-text">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis
+              nesciunt amet, illo itaque similique repellat.
+            </p>
+          </div>
+        </div>
+        {% endfor %} {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Work -->
+<section id="work" class="bg-dark text-white text-center">
+  <h2 class="display-4">We Work For You</h2>
+  <h4>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem velit
+    aperiam, unde aliquid at similique!
+  </h4>
+  <hr />
+  <a href="{% url 'listings' %}" class="btn btn-secondary text-white btn-lg">
+    View Our Featured Listings
+  </a>
+</section>
+
+<!-- Team -->
+<section id="team" class="py-5">
+  <div class="container">
+    <h2 class="text-center">Our Team</h2>
+    <div class="row text-center">
+      {% if realtors %} {% for person in realtors %}
+      <div class="col-md-4 mb-4">
+        <img
+          src="{{ person.photo.url }}"
+          alt="{{ person.name }}"
+          class="rounded-circle mb-3"
+        />
+        <h4>{{ person.name }}</h4>
+        <p class="text-success">
+          <i class="fas fa-award text-success mb-3"></i> {{ person.position }}
+        </p>
+        <hr />
+        <p><i class="fas fa-phone"></i> {{ person.phone }}</p>
+        <p><i class="fas fa-envelope-open"></i> {{ person.email }}</p>
+      </div>
+      {% endfor %} {% else %}
+      <p class="text-center">No team members available at the moment.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock content %}
