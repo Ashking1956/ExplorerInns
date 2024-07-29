@@ -20,9 +20,7 @@
     {% comment %} Navigation Bar {% endcomment %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">
-          ExplorerInns
-        </a>
+        <a class="navbar-brand" href="{% url 'home' %}"> ExplorerInns </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -53,16 +51,46 @@
           </ul>
 
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item mr-3">
-              <a class="nav-link" href="{% url 'register' %}">
-                <i class="fas fa-user-plus"></i> Register
+            {% if user.is_authenticated %}
+            <li
+              class="nav-item mr-3 {% if 'dashboard' in request.path %} active {% endif %}"
+            >
+              <a class="nav-link" href="{% url 'dashboard' %}">
+                <i class="fas fa-user-plus"></i>
+                Welcome {{user.username}} (Dashboard)
               </a>
             </li>
-            <li class="nav-item mr-3">
+            <li>
+              <form
+                action="{% url 'logout' %}"
+                method="post"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="btn btn-outline-success my-2 my-sm-0"
+                >
+                  Log Out
+                </button>
+              </form>
+            </li>
+            {% else %}
+            <li
+              class="nav-item mr-3 {% if 'register' in request.path %} active {% endif %}"
+            >
+              <a class="nav-link" href="{% url 'register' %}">
+                <i class="fas fa-sign-in-alt"></i> Register
+              </a>
+            </li>
+            <li
+              class="nav-item mr-3 {% if 'login' in request.path %} active {% endif %}"
+            >
               <a class="nav-link" href="{% url 'login' %}">
                 <i class="fas fa-sign-in-alt"></i> Login
               </a>
             </li>
+            {% endif %}
           </ul>
         </div>
       </div>

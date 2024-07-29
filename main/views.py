@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Listing, Realtor
 from django.core.paginator import Paginator
+from django.contrib import messages, auth
+from django.contrib.auth.models import User
 
 price_choices = {
     "100000": '$100,000',
@@ -101,12 +103,11 @@ def index(request):
 
 def about_us(request):
     realtor = Realtor.objects.all()
-    mvp_realtors = Realtor.objects.all().filter(is_mvp=True)
+    mvp_realtors = realtor.filter(is_mvp=True)
     context = {
         'realtors': realtor,
         'is_mvp': mvp_realtors
     }
-
     return render(request, 'about_us.html', context)
 
 
@@ -120,11 +121,9 @@ def listing(request, listing_id):
 
 def listing_index(request):
     listings = Listing.objects.order_by("-list_date").filter(is_published=True)
-
     paginator = Paginator(listings, 6)
     page = request.GET.get('page')
     paginated_listings = paginator.get_page(page)
-
     context = {
         'listings': paginated_listings
     }
@@ -145,43 +144,87 @@ def search(request):
     if 'city' in request.GET:
         city = request.GET['city']
         if city:
-            queryset_list = queryset_list.filter(
-                city__iexact=city)
+            queryset_list = queryset_list.filter(city__iexact=city)
 
     # State
     if 'state' in request.GET:
         state = request.GET['state']
         if state:
-            queryset_list = queryset_list.filter(
-                state__iexact=state)
+            queryset_list = queryset_list.filter(state__iexact=state)
 
     # Bedrooms
     if 'bedrooms' in request.GET:
         bedroom = request.GET['bedrooms']
         if bedroom:
-            queryset_list = queryset_list.filter(
-                bedrooms__lte=bedroom)
+            queryset_list = queryset_list.filter(bedrooms__lte=bedroom)
 
-    # Bedrooms
+    # Price
     if 'price' in request.GET:
-        temp = request.GET['price']
-        if temp:
-            queryset_list = queryset_list.filter(
-                price__lte=temp)
+        price = request.GET['price']
+        if price:
+            queryset_list = queryset_list.filter(price__lte=price)
 
     context = {
         'state_choices': state_choices,
         'bedroom_choices': bedroom_choices,
         'price_choices': price_choices,
         'listings': queryset_list,
-        'values' : request.GET
+        'values': request.GET
     }
     return render(request, 'search.html', context)
 
 
 def login(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            print(username, password)
+            return redirect(index)
+        else:
+            messages.info(request, "Invalid username or password")
+            return redirect(login)
     return render(request, 'login.html')
 
 
 def register(request):
-    return render(request, 'register.html')
+    if request.method == "POST":
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+        print(first_name, last_name, username, email, password, password2)
+        if User.objects.filter(username=username).exists():
+            messages.info(
+                request, "Username already exists. Try with different username.")
+            return redirect(register)
+        else:
+            if password == password2:
+                user = User.objects.create_user(
+                    username=username, email=email, password=password)
+                user.set_password(password)
+                user.save()
+                auth.login(request=request, user=user)
+                return redirect(index)
+            else:
+                messages.info(
+                    request, "Password does not match!")
+            return redirect(register)
+
+    else:
+        return render(request, 'register.html')
+
+
+def logout(request):
+    if request.method == 'POST':
+        auth.logout(request)
+        messages.success(request, 'You are now logged out')
+    return redirect(index)
+
+
+def dashboard(request):
+    return render(request, 'dashboard.html')
