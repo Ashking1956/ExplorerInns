@@ -7,7 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
+    <title>ExpplorerInns | Login </title>
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -91,6 +91,7 @@
     <form class="form-signin" method="POST">
       {% csrf_token %}
       <h1 class="h3 mb-3 font-weight-normal">Please Log in</h1>
+      {% include "_alert.html" %}
       <label for="inputEmail" class="sr-only">Username</label>
       <input
         type="text"

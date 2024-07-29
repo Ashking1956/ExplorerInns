@@ -1,9 +1,10 @@
 import datetime
-from pyexpat import model
 from django.db import models
 
 # Create your models here.
 # Realtor model
+
+
 class Realtor(models.Model):
     name = models.CharField(max_length=200)
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/')
@@ -12,6 +13,7 @@ class Realtor(models.Model):
     email = models.CharField(max_length=50)
     is_mvp = models.BooleanField(default=False)
     hire_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
+
     def __str__(self):
         return self.name
 
@@ -40,5 +42,20 @@ class Listing(models.Model):
     photo_6 = models.ImageField(upload_to='photos/%Y/%m/%d/', blank=True)
     is_published = models.BooleanField(default=True)
     list_date = models.DateTimeField(default=datetime.datetime.now, blank=True)
+
     def __str__(self):
         return self.title
+
+
+class Contact(models.Model):
+    listing = models.CharField(max_length=200)
+    listing_id = models.IntegerField()
+    name = models.CharField(max_length=200)
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    message = models.TextField(blank=True)
+    contact_date = models.DateField(default=datetime.datetime.now())
+    user_id = models.IntegerField(blank=True)
+
+    def __str__(self):
+        return self.name

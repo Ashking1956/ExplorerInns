@@ -10,8 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
 import os
 from pathlib import Path
+
+from regex import E
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,7 +139,13 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
-    messages.ERROR : 'danger' 
-} 
+    messages.ERROR: 'danger'
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "fakeashking1956@gmail.com"
+EMAIL_HOST_PASSWORD = "Jaymataji1956@"
+EMAIL_USE_TLS = True

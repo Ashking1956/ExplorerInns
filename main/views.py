@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Listing, Realtor
+from .models import Contact, Listing, Realtor
 from django.core.paginator import Paginator
+# from django.core.mail import send_mail
 from django.contrib import messages, auth
 from django.contrib.auth.models import User
 
@@ -227,4 +228,45 @@ def logout(request):
 
 
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    user_contacts = Contact.objects.order_by(
+        '-contact_date').filter(user_id=request.user.id)
+    context = {
+        'contacts': user_contacts
+    }
+    return render(request, 'dashboard.html', context)
+
+
+def contact(request):
+    if request.method == "POST":
+        listing_id = request.POST.get('listing_id')
+        listing = request.POST.get('listing')
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        message = request.POST.get('message')
+        user_id = request.POST.get('user_id')
+        realtor_email = request.POST.get('realtor_email')
+
+        contact = Contact(
+            listing=listing,
+            listing_id=listing_id,
+            name=name,
+            email=email,
+            phone=phone,
+            message=message,
+            user_id=user_id
+        )
+        contact.save()
+        # send_mail(
+        #     subject="Property Listing Inquiry",
+        #     message=f"There has been an inquiry for {listing}. Sign into the admin panel for more info.",
+        #     from_email="fakeashking1956@gmail.com",
+        #     recipient_list=[realtor_email, 'fakeashking1956@gmail.com'],
+        #     fail_silently=False
+        # )
+        messages.success(
+            request, "Your request has been submitted, a realtor will get back to you soon.")
+        print(listing_id, listing, name, email,
+              phone, message, user_id, realtor_email)
+    # Make sure 'listing_index' is a valid URL name
+    return redirect(listing_index)

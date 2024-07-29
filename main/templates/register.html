@@ -16,6 +16,7 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+    <title>ExpplorerInns | Register </title>
 
     <style>
       html,
@@ -92,15 +93,16 @@
     <form class="form-signin" method="POST">
       {% csrf_token %}
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      {% include "_alert.html" %}
       <label for="inputEmail" class="sr-only">first_name</label>
       <input
         type="text"
         id="inputEmail"
         name="first_name"
         class="form-control"
-        placeholder="first name"
+        placeholder="First Name"
         required
-        autofocus
+        autofocu  s
       />
       <label for="inputEmail" class="sr-only">last_name</label>
       <input
@@ -108,7 +110,7 @@
         id="inputEmail"
         name="last_name"
         class="form-control"
-        placeholder="last name"
+        placeholder="Last Name"
         required
         autofocus
       />
@@ -149,7 +151,7 @@
         placeholder="Conform Password"
         required
       />
-      <div class="checkbox mb-3">
+      <div class="checkbox mb-3" style="color: white">
         <label>
           <input type="checkbox" value="remember-me" /> Remember me
         </label>
