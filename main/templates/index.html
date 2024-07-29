@@ -1,8 +1,5 @@
-{% extends "base.html" %}{% load static %} {% load humanize %}
-{% block title %}
-Welcome
-{% endblock title %}
-{% block content %} 
+{% extends "base.html" %}{% load static %} {% load humanize %} {% block title %}
+Welcome {% endblock title %} {% block content %}
 
 <section id="showcase-inner" class="py-5 text-white">
   <div class="container">
@@ -36,7 +33,10 @@ Welcome
 </section>
 
 <!-- Showcase -->
-<section id="showcase" style="background: url('{% static 'img/showcase.jpg' %}')">
+<section
+  id="showcase"
+  style="background: url('{% static 'img/showcase.jpg' %}')"
+>
   <div class="container text-center">
     <div class="home-search p-5">
       <div class="overlay p-5">
@@ -116,8 +116,7 @@ Welcome
   </div>
 </section>
 
-{% comment %} alert {% endcomment %}
-{% include '_alert.html' %} 
+{% comment %} alert {% endcomment %} {% include '_alert.html' %}
 <!-- Listings -->
 <section id="listings" class="py-5">
   <div class="container">
@@ -131,7 +130,7 @@ Welcome
           <div class="card-img-overlay">
             <h2>
               <span class="badge badge-secondary text-white"
-                >${{listing.price | intcomma }}</span
+                >₹{{listing.price | intcomma }}</span
               >
             </h2>
           </div>

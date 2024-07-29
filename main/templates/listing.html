@@ -120,7 +120,7 @@ Listing {% endblock title %} {% block content %}
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-secondary">
                 <i class="fas fa-money-bill-alt"></i> Asking Price:
-                <span class="float-right">${{ listing.price | intcomma }}</span>
+                <span class="float-right">₹{{ listing.price | intcomma }}</span>
               </li>
               <li class="list-group-item text-secondary">
                 <i class="fas fa-bed"></i> Bedrooms:
@@ -229,7 +229,14 @@ Listing {% endblock title %} {% block content %}
               type="text"
               name="name"
               class="form-control"
-              {% if user.is_authenticated %} value="{{ user.username }}" {% endif %}
+              {%
+              if
+              user.is_authenticated
+              %}
+              value="{{ user.username }}"
+              {%
+              endif
+              %}
               required
             />
           </div>
@@ -239,7 +246,14 @@ Listing {% endblock title %} {% block content %}
               type="email"
               name="email"
               class="form-control"
-              {% if user.is_authenticated %} value="{{ user.email }}" {% endif %}
+              {%
+              if
+              user.is_authenticated
+              %}
+              value="{{ user.email }}"
+              {%
+              endif
+              %}
               required
             />
           </div>
