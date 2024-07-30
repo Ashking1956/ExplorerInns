@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} Update Listing {% endblock title %}
+
+{% block content %}
+<section id="update-listing" class="py-4">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Update Listing</h2>
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Update Listing</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
