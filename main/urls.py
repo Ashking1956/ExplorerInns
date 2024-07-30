@@ -20,5 +20,4 @@ urlpatterns = [
     path('realtor/add/', views.add_realtor, name='add_realtor'),
     path('realtor/<int:pk>/update/', views.update_realtor, name='update_realtor'),
     path('realtor/<int:pk>/delete/', views.delete_realtor, name='delete_realtor'),
-    path('realtors/', views.realtor_list, name='realtor_list'),
 ]

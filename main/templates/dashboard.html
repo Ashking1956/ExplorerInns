@@ -1,4 +1,8 @@
-{% extends "base.html" %} {% block title %} Dashboard {% endblock title %} {% block content %}
+{% extends "base.html" %} 
+
+{% block title %} Dashboard {% endblock title %} 
+
+{% block content %}
 <section id="showcase-inner" class="py-5 text-white">
   <div class="container">
     <div class="row text-center">
@@ -45,21 +49,34 @@
               <td>{{ contact.id }}</td>
               <td>{{ contact.listing }}</td>
               <td>
-                <a
-                  class="btn btn-light"
-                  href="{% url 'listing' contact.listing_id %}"
-                  >View Listing</a
-                >
-                <a
-                  class="btn btn-primary"
-                  href="{% url 'update_listing' contact.listing_id %}"
-                  >Update</a
-                >
-                <a
-                  class="btn btn-danger"
-                  href="{% url 'delete_listing' contact.listing_id %}"
-                  >Delete</a
-                >
+                <a class="btn btn-light" href="{% url 'listing' contact.listing_id %}">View Listing</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>You have not posted about any properties yet</p>
+        {% endif %}
+        {% if user_listings %}
+        <p>Here are the property listings that you have inquired about</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Property</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for listing in user_listings %}
+            <tr>
+              <td>{{ listing.id }}</td>
+              <td>{{ listing.title }}</td>
+              <td>
+                <a class="btn btn-light" href="{% url 'listing' listing.id %}">View Listing</a>
+                <a class="btn btn-primary" href="{% url 'update_listing' listing.id %}">Update</a>
+                <a class="btn btn-danger" href="{% url 'delete_listing' listing.id %}">Delete</a>
               </td>
             </tr>
             {% endfor %}
@@ -69,7 +86,9 @@
         <p>You have not inquired about any properties yet</p>
         {% endif %}
         <a href="{% url 'add_listing' %}" class="btn btn-primary">Add Listing</a>
-        <a href="{% url 'add_realtor' %}" class="btn btn-primary">Add Realtor</a>
+        {% if show_add_realtor %}
+          <a href="{% url 'add_realtor' %}" class="btn btn-primary">Add Realtor</a>
+        {% endif %}
       </div>
     </div>
   </div>

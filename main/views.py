@@ -215,13 +215,19 @@ def logout(request):
 
 @login_required
 def dashboard(request):
-    user_contacts = Contact.objects.order_by('-contact_date').filter(user_id=request.user.id)
+    show_add_realtor = not Realtor.objects.filter(
+        email=request.user.email).exists()
+    user_contacts = Contact.objects.order_by(
+        '-contact_date').filter(user_id=request.user.id)
+    user_listings = Listing.objects.filter(
+        realtor=get_object_or_404(Realtor, email=request.user.email))
     context = {
         'contacts': user_contacts,
-        'user': request.user
+        'user': request.user,
+        'show_add_realtor': show_add_realtor,
+        'user_listings' : user_listings
     }
     return render(request, 'dashboard.html', context)
-
 
 
 def contact(request):
@@ -259,6 +265,7 @@ def contact(request):
     # Make sure 'listing_index' is a valid URL name
     return redirect(listing_index)
 
+
 @login_required
 def add_listing(request):
     if request.method == 'POST':
@@ -269,11 +276,12 @@ def add_listing(request):
             return redirect('dashboard')
     else:
         form = ListingForm()
-    
+
     context = {
         'form': form
     }
     return render(request, '_addListing.html', context)
+
 
 @login_required
 def update_listing(request, listing_id):
@@ -286,12 +294,13 @@ def update_listing(request, listing_id):
             return redirect('dashboard')
     else:
         form = ListingForm(instance=listing)
-    
+
     context = {
         'form': form,
         'listing': listing
     }
     return render(request, 'update_listing.html', context)
+
 
 @login_required
 def delete_listing(request, listing_id):
@@ -300,7 +309,7 @@ def delete_listing(request, listing_id):
         listing.delete()
         messages.success(request, 'Listing deleted successfully')
         return redirect('dashboard')
-    
+
     context = {
         'listing': listing
     }
@@ -312,13 +321,18 @@ def add_realtor(request):
     if request.method == 'POST':
         form = RealtorForm(request.POST, request.FILES)
         if form.is_valid():
+            if Realtor.objects.filter(email=form.cleaned_data['email']).exists():
+                messages.info(
+                    request, "Realtor with this email / name already exists.")
+                return redirect('dashboard')
             realtor = form.save(commit=False)
-            # Optionally set user or other fields
             realtor.save()
             return redirect('dashboard')  # Redirect to a list or detail view
     else:
         form = RealtorForm()
-    return render(request, 'add_realtor.html', {'form': form})
+    context = {'form': form}
+    return render(request, 'add_realtor.html', context)
+
 
 @login_required
 def update_realtor(request, pk):
@@ -327,10 +341,12 @@ def update_realtor(request, pk):
         form = RealtorForm(request.POST, request.FILES, instance=realtor)
         if form.is_valid():
             form.save()
-            return redirect('realtor_detail', pk=realtor.pk)  # Redirect to detail view
+            # Redirect to detail view
+            return redirect('realtor_detail', pk=realtor.pk)
     else:
         form = RealtorForm(instance=realtor)
     return render(request, 'update_realtor.html', {'form': form})
+
 
 @login_required
 def delete_realtor(request, pk):
@@ -339,8 +355,3 @@ def delete_realtor(request, pk):
         realtor.delete()
         return redirect('realtor_list')  # Redirect to a list view
     return render(request, 'delete_realtor.html', {'realtor': realtor})
-
-@login_required
-def realtor_list(request):
-    realtors = Realtor.objects.all()
-    return render(request, 'realtor_list.html', {'realtors': realtors})

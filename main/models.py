@@ -4,6 +4,12 @@ from django.db import models
 # Create your models here.
 # Realtor model
 
+# first_name = request.POST['first_name']
+# last_name = request.POST['last_name']
+# username = request.POST['username']
+# email = request.POST['email']
+# password = request.POST['password']
+# password2 = request.POST['password2']
 
 class Realtor(models.Model):
     name = models.CharField(max_length=200)
