@@ -212,20 +212,22 @@ def logout(request):
         messages.success(request, 'You are now logged out')
     return redirect(index)
 
-
 @login_required
 def dashboard(request):
-    show_add_realtor = not Realtor.objects.filter(
-        email=request.user.email).exists()
-    user_contacts = Contact.objects.order_by(
-        '-contact_date').filter(user_id=request.user.id)
-    user_listings = Listing.objects.filter(
-        realtor=get_object_or_404(Realtor, email=request.user.email))
+    show_add_realtor = not Realtor.objects.filter(email=request.user.email).exists()
+    user_contacts = Contact.objects.order_by('-contact_date').filter(user_id=request.user.id)
+    
+    try:
+        realtor = Realtor.objects.get(email=request.user.email)
+        user_listings = Listing.objects.filter(realtor=realtor)
+    except Realtor.DoesNotExist:
+        user_listings = []
+
     context = {
         'contacts': user_contacts,
         'user': request.user,
         'show_add_realtor': show_add_realtor,
-        'user_listings' : user_listings
+        'user_listings': user_listings,
     }
     return render(request, 'dashboard.html', context)
 
